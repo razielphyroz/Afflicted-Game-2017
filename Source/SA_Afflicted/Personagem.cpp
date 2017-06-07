@@ -58,6 +58,7 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Move", this, &APersonagem::Move);
 	PlayerInputComponent->BindAxis("Sides", this, &APersonagem::MoveSides);
+	PlayerInputComponent->BindAxis("Turn", this, &APersonagem::AddControllerYawInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -70,6 +71,14 @@ void APersonagem::Move(float Value) {
 		Value = 1.0f;
 	}
 	AddMovementInput(Forward, Value);
+	if(Controller != NULL && Value != 0.0f){
+		FRotator Rotation = Controller->GetControlRotation();
+		if (GetCharacterMovement()->IsMovingOnGround() || GetCharacterMovement()->IsFalling()) {
+			Rotation.Pitch = 0.0f;
+		}
+		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+	}
 }
 
 void APersonagem::MoveSides(float Value) {
@@ -78,4 +87,9 @@ void APersonagem::MoveSides(float Value) {
 		Value = 1.0f;
 	}
 	AddMovementInput(Side, Value);
+	if (Controller != NULL && Value != 0.0f) {
+		FRotator Rotation = Controller->GetControlRotation();
+		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
+		AddMovementInput(Direction, Value);
+	}
 }

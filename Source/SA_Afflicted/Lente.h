@@ -23,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	int32 LenteVermelha, LenteVerde, LenteAzul;
 	int32 GetLenteVermelha();
-	int32 SetLenteVermelha(int32 = 0);
+	void SetLenteVermelha(int32 NewLente);
 
 private:
 

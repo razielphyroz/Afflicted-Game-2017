@@ -2,6 +2,7 @@
 
 #include "SA_Afflicted.h"
 #include "Lente.h"
+#include "Personagem.h"
 
 
 // Sets default values
@@ -14,17 +15,17 @@ ALente::ALente()
 	CollisionComp->bGenerateOverlapEvents = true;
 	CollisionComp->SetCollisionProfileName("OverlapAllDynamic");
 	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ALente::OnOverlapBegin);
-	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ALente::OnOverlapBegin);
 	CollisionComp->SetBoxExtent(FVector(10.0f, 10.0f, 10.0f));
 	RootComponent = CollisionComp;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionProfileName("NoCollision");
-	ConstructorHelpers::FObjectFinder<UStaticMesh> LoadMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube''"));
-	if (LoadMesh.Succeeded) {
+	ConstructorHelpers::FObjectFinder<UStaticMesh> LoadMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+	if (LoadMesh.Succeeded()) {
 		MeshComp->SetStaticMesh(LoadMesh.Object);
 
 	}
+	LenteVermelha = 1;
 
 }
 
@@ -44,12 +45,12 @@ void ALente::Tick(float DeltaTime)
 
 int32 ALente::GetLenteVermelha()
 {
-	return int32();
+	return LenteVermelha;
 }
 
-int32 ALente::SetLenteVermelha(int32)
+void ALente::SetLenteVermelha(int32 NewLente)
 {
-	return int32();
+	LenteVermelha = NewLente;
 }
 
 void ALente::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {

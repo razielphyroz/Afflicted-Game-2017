@@ -21,10 +21,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	int32 LenteVermelha, LenteVerde, LenteAzul;
-	int32 GetLenteVermelha();
-	void SetLenteVermelha(int32 NewLente);
-
+	
+	
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Collision")

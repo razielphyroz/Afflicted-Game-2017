@@ -4,6 +4,7 @@
 #include "Personagem.h"
 
 
+
 // Sets default values
 APersonagem::APersonagem()
 {
@@ -34,6 +35,7 @@ APersonagem::APersonagem()
 	}
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	LentesDisponiveis = 1;
 
 }
 
@@ -65,6 +67,13 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+int16 APersonagem::GetLentesDisponiveis(){
+	return int16();
+}
+
+void APersonagem::SetLentesDisponiveis(int16 NewValue){
+}
+
 void APersonagem::Move(float Value) {
 	FVector Forward(1.0f, 0.0f, 0.0f);
 	if (Value > 1.0f) {
@@ -93,3 +102,5 @@ void APersonagem::MoveSides(float Value) {
 		AddMovementInput(Direction, Value);
 	}
 }
+
+

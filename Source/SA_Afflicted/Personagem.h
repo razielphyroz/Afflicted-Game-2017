@@ -22,6 +22,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	int16 GetLentesDisponiveis();
+	void SetLentesDisponiveis(int16 NewValue);
+
 
 
 private:
@@ -36,4 +39,5 @@ private:
 
 	void MoveSides(float Value);
 
+	int16 LentesDisponiveis;
 };

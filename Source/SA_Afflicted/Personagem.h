@@ -25,7 +25,11 @@ public:
 	int16 GetLentesDisponiveis();
 	void SetLentesDisponiveis(int16 NewValue);
 
+	bool IsTemArma();
+	void APersonagem::SetTemArma(bool NewValue);
 
+	bool IsTemLanterna();
+	void SetTemLanterna(bool NewValue);
 
 private:
 
@@ -40,4 +44,7 @@ private:
 	void MoveSides(float Value);
 
 	int16 LentesDisponiveis;
+
+	bool TemArma;
+	bool TemLanterna;
 };

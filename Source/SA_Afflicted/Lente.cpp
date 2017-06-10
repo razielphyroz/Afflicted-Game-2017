@@ -20,6 +20,7 @@ ALente::ALente()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionProfileName("NoCollision");
+	MeshComp->SetWorldScale3D(FVector(0.6f, 0.6f, 0.6f));
 	ConstructorHelpers::FObjectFinder<UStaticMesh> LoadMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
 	if (LoadMesh.Succeeded()) {
 		MeshComp->SetStaticMesh(LoadMesh.Object);

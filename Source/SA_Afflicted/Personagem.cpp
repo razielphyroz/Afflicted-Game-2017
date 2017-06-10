@@ -68,10 +68,11 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 int16 APersonagem::GetLentesDisponiveis(){
-	return int16();
+	return LentesDisponiveis;
 }
 
 void APersonagem::SetLentesDisponiveis(int16 NewValue){
+	LentesDisponiveis = NewValue;
 }
 
 void APersonagem::Move(float Value) {
@@ -103,4 +104,18 @@ void APersonagem::MoveSides(float Value) {
 	}
 }
 
+bool APersonagem::IsTemArma() {
+	return TemArma;
+}
 
+void APersonagem::SetTemArma(bool NewValue) {
+	TemArma = NewValue;
+}
+
+bool APersonagem::IsTemLanterna() {
+	return TemLanterna;
+}
+
+void APersonagem::SetTemLanterna(bool NewValue) {
+	TemLanterna = NewValue;
+}

@@ -16,6 +16,7 @@ APersonagem::APersonagem()
 	CameraBoom->SetupAttachment(RootComponent);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	//CameraComp->bUsePawnControlRotation = true;
 	CameraComp->SetupAttachment(CameraBoom);
 
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
@@ -36,6 +37,7 @@ APersonagem::APersonagem()
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	LentesDisponiveis = 1;
+	bUseControllerRotationPitch = true;
 
 }
 

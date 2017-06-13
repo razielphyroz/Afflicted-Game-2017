@@ -61,6 +61,7 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Move", this, &APersonagem::Move);
 	PlayerInputComponent->BindAxis("Sides", this, &APersonagem::MoveSides);
 	PlayerInputComponent->BindAxis("Turn", this, &APersonagem::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Lookup", this, &APersonagem::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -76,32 +77,36 @@ void APersonagem::SetLentesDisponiveis(int16 NewValue){
 }
 
 void APersonagem::Move(float Value) {
-	FVector Forward(1.0f, 0.0f, 0.0f);
-	if (Value > 1.0f) {
-		Value = 1.0f;
-	}
-	AddMovementInput(Forward, Value);
-	if(Controller != NULL && Value != 0.0f){
+	//FVector Forward(1.0f, 0.0f, 0.0f);
+	//if (Value > 1.0f) {
+		//Value = 1.0f;
+	//}
+	if (Controller != NULL && Value != 0.0f) {
 		FRotator Rotation = Controller->GetControlRotation();
-		if (GetCharacterMovement()->IsMovingOnGround() || GetCharacterMovement()->IsFalling()) {
+		if (GetCharacterMovement()->IsMovingOnGround() ||
+			GetCharacterMovement()->IsFalling()) {
 			Rotation.Pitch = 0.0f;
 		}
-		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
+		const FVector Direction = FRotationMatrix(Rotation).
+			GetScaledAxis(EAxis::X);
 		AddMovementInput(Direction, Value);
+
 	}
 }
 
 void APersonagem::MoveSides(float Value) {
-	FVector Side(0.0f, 1.0f, 0.0f);
-	if (Value > 1.0f) {
-		Value = 1.0f;
-	}
-	AddMovementInput(Side, Value);
+	//FVector Side(0.0f, 1.0f, 0.0f);
+	//if (Value > 1.0f) {
+	//	Value = 1.0f;
+//	}
+	//AddMovementInput(Side, Value);
 	if (Controller != NULL && Value != 0.0f) {
 		FRotator Rotation = Controller->GetControlRotation();
 		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
 		AddMovementInput(Direction, Value);
 	}
+
+	
 }
 
 bool APersonagem::IsTemArma() {

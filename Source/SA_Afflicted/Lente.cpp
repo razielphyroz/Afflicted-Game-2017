@@ -15,12 +15,13 @@ ALente::ALente()
 	CollisionComp->bGenerateOverlapEvents = true;
 	CollisionComp->SetCollisionProfileName("OverlapAllDynamic");
 	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ALente::OnOverlapBegin);
-	CollisionComp->SetBoxExtent(FVector(0.6f, 0.6f, 0.6f));
+	CollisionComp->SetBoxExtent(FVector(0.1f, 0.1f, 0.1f));
 	RootComponent = CollisionComp;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionProfileName("NoCollision");
-	MeshComp->SetWorldScale3D(FVector(0.6f, 0.6f, 0.6f));
+	MeshComp->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+	MeshComp->SetupAttachment(CollisionComp);
 	ConstructorHelpers::FObjectFinder<UStaticMesh> LoadMesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
 	if (LoadMesh.Succeeded()) {
 		MeshComp->SetStaticMesh(LoadMesh.Object);

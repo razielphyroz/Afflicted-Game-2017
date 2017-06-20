@@ -39,11 +39,14 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* CameraBoom;
 
+	TSubclassOf<class UUserWidget> UserWidgetPause;
+
 	void Move(float Value);
 
 	void MoveSides(float Value);
 
 	int16 LentesDisponiveis;
+	void Pause();	
 
 	bool TemArma;
 	bool TemLanterna;

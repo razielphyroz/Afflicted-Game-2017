@@ -2,6 +2,13 @@
 
 #include "SA_Afflicted.h"
 #include "Personagem.h"
+#include "Runtime/UMG/Public/UMG.h"
+#include "Runtime/UMG/Public/UMGStyle.h"
+#include "Runtime/UMG/Public/IUMGModule.h"
+#include "Runtime/UMG/Public/Slate/SObjectWidget.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Runtime/UMG/Public/Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/UserWidget.h"
 
 
 
@@ -20,6 +27,13 @@ APersonagem::APersonagem()
 	CameraComp->SetupAttachment(CameraBoom);
 
 	GetCharacterMovement()->MaxWalkSpeed = 400.0f;
+
+	ConstructorHelpers::FClassFinder<UUserWidget> LoadWidget
+		 (TEXT("WidgetBlueprint'/Game/Widgets/Pause.Pause_C'"));
+	if (LoadWidget.Succeeded()) {
+		UserWidgetPause = LoadWidget.Class;
+		
+	}
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMesh(TEXT("SkeletalMesh'/Game/AnimStarterPack/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
 	if (SkeletalMesh.Succeeded()) {
@@ -67,6 +81,7 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &APersonagem::Pause);
 
 }
 
@@ -126,3 +141,24 @@ bool APersonagem::IsTemLanterna() {
 void APersonagem::SetTemLanterna(bool NewValue) {
 	TemLanterna = NewValue;
 }
+
+void APersonagem::Pause() {
+	UWorld* World = GetWorld();
+	if (World) {
+		APlayerController* PlayerController =
+			UGameplayStatics::GetPlayerController(World, 0);
+		if (PlayerController && UserWidgetPause != NULL) {
+			PlayerController->SetPause(true);
+			UUserWidget* UserW =
+				UWidgetBlueprintLibrary::Create(
+					World, UserWidgetPause, PlayerController);
+			if (UserW) {
+				UserW->AddToViewport();
+				PlayerController->bShowMouseCursor = true;
+				
+			}
+			
+		}
+		
+	}
+} 		  

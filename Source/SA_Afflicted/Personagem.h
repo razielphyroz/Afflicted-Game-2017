@@ -22,14 +22,20 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	int16 GetLentesDisponiveis();
 	void SetLentesDisponiveis(int16 NewValue);
 
 	bool IsTemArma();
-	void APersonagem::SetTemArma(bool NewValue);
+	void SetTemArma(bool NewValue);
 
 	bool IsTemLanterna();
 	void SetTemLanterna(bool NewValue);
+
+	int8 GetLife();
+	void SetLife(int8 Value);
+
+	void AdicionarCorDisponivel();
 
 private:
 
@@ -39,14 +45,22 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* CameraBoom;
 
+
 	TSubclassOf<class UUserWidget> UserWidgetPause;
+
+	class ALanternaDoJogador* LanternaEmUso;
+
 
 	void Move(float Value);
 
 	void MoveSides(float Value);
 
+	void MudarCor();
+
 	int16 LentesDisponiveis;
 	void Pause();	
+
+	int8 Life;
 
 	bool TemArma;
 	bool TemLanterna;

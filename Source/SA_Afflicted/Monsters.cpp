@@ -32,7 +32,7 @@ AMonsters::AMonsters()
 
 	CorParaAparecer = FMath::FRandRange(0, 5);
 	Damage = 5;
-
+	Life = 100;
 }
 
 // Called when the game starts or when spawned
@@ -95,4 +95,14 @@ void AMonsters::Update()
 
 int8 AMonsters::GetCorParaAparecer() {
 	return CorParaAparecer;
+}
+
+int8 AMonsters::GetLife()
+{
+	return Life;
+}
+
+void AMonsters::SetLife(int8 Value)
+{
+	Life = Value;
 }

@@ -23,6 +23,10 @@ public:
 
 	int8 GetCorParaAparecer();
 
+	int8 GetLife();
+
+	void SetLife(int8 Value);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,6 +44,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
 		int8 Damage;
+
+	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
+		int8 Life;
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

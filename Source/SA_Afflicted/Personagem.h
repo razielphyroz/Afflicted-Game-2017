@@ -37,6 +37,8 @@ public:
 
 	void AdicionarCorDisponivel();
 
+	void Atirar();
+
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))

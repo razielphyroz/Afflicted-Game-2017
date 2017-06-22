@@ -10,6 +10,7 @@
 #include "Runtime/UMG/Public/Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "LanternaDoJogador.h"
+#include "Projectile.h"
 
 
 
@@ -93,6 +94,7 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &APersonagem::Pause);
 	PlayerInputComponent->BindAction("CorLant", IE_Pressed, this, &APersonagem::MudarCor);
+	PlayerInputComponent->BindAction("Atirar", IE_Pressed, this, &APersonagem::Atirar);
 
 }
 
@@ -191,5 +193,20 @@ void APersonagem::AdicionarCorDisponivel()
 {
 	if (LanternaEmUso != nullptr) {
 		LanternaEmUso->AdicionarCorDisponivel();
+	}
+}
+
+void APersonagem::Atirar() 
+{
+	UWorld* World = GetWorld();
+	if (World) {
+		FActorSpawnParameters SpawnParameters;
+		AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), FRotator::ZeroRotator, SpawnParameters);
+		if (Projectile) {
+			FRotator Rotation = CameraComp->GetComponentRotation();
+			Rotation.Pitch += 10.0f;
+			FVector const LaunchDir = Rotation.Vector();
+			Projectile->InitVelocity(LaunchDir);
+		}
 	}
 }

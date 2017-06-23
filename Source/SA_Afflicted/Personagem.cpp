@@ -12,8 +12,6 @@
 #include "LanternaDoJogador.h"
 #include "Projectile.h"
 
-
-
 // Sets default values
 APersonagem::APersonagem()
 {
@@ -41,6 +39,7 @@ APersonagem::APersonagem()
 		GetMesh()->SetSkeletalMesh(SkeletalMesh.Object);
 	}
 
+	GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetWorldLocation(FVector(0.0f, 0.0f, -80.0f));
 	GetMesh()->SetWorldScale3D(FVector(0.9f, 0.9f, 0.9f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
@@ -201,12 +200,6 @@ void APersonagem::Atirar()
 	UWorld* World = GetWorld();
 	if (World) {
 		FActorSpawnParameters SpawnParameters;
-		AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), FRotator::ZeroRotator, SpawnParameters);
-		if (Projectile) {
-			FRotator Rotation = CameraComp->GetComponentRotation();
-			Rotation.Pitch += 10.0f;
-			FVector const LaunchDir = Rotation.Vector();
-			Projectile->InitVelocity(LaunchDir);
-		}
+		AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), CameraComp->GetComponentRotation(), SpawnParameters);
 	}
 }

@@ -36,8 +36,8 @@ ALanternaDoJogador::ALanternaDoJogador()
 	LuzLanterna->bUseTemperature = true;
 
 	LuzLanterna->SetIntensity(100000.0f);
-	LuzLanterna->SetInnerConeAngle(22.0f);
-	LuzLanterna->SetOuterConeAngle(33.0f);
+	LuzLanterna->SetInnerConeAngle(25.0f);
+	LuzLanterna->SetOuterConeAngle(55.0f);
 	LuzLanterna->SetAttenuationRadius(2500.0f);
 
 	CoresDisponiveis = 6;

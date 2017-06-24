@@ -11,6 +11,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LanternaDoJogador.h"
 #include "Projectile.h"
+#include "ArmaDoJogador.h"
 
 // Sets default values
 APersonagem::APersonagem()
@@ -31,7 +32,6 @@ APersonagem::APersonagem()
 		 (TEXT("WidgetBlueprint'/Game/Widgets/Pause.Pause_C'"));
 	if (LoadWidget.Succeeded()) {
 		UserWidgetPause = LoadWidget.Class;
-		
 	}
 
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMesh(TEXT("SkeletalMesh'/Game/AnimStarterPack/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
@@ -49,12 +49,12 @@ APersonagem::APersonagem()
 		GetMesh()->SetAnimInstanceClass(AnimObj.Object->GetAnimBlueprintGeneratedClass());
 	}
 
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationPitch = true;
+
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	
 	Life = 100;
-
-	//LanternaEmUso = ConstructObject<ALanternaDoJogador>(ALanternaDoJogador::StaticClass());
 
 }
 
@@ -94,7 +94,6 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &APersonagem::Pause);
 	PlayerInputComponent->BindAction("CorLant", IE_Pressed, this, &APersonagem::MudarCor);
 	PlayerInputComponent->BindAction("Atirar", IE_Pressed, this, &APersonagem::Atirar);
-
 }
 
 int16 APersonagem::GetLentesDisponiveis()
@@ -137,26 +136,6 @@ void APersonagem::MudarCor()
 	}
 }
 
-bool APersonagem::IsTemArma()
-{
-	return TemArma;
-}
-
-void APersonagem::SetTemArma(bool NewValue)
-{
-	TemArma = NewValue;
-}
-
-bool APersonagem::IsTemLanterna()
-{
-	return TemLanterna;
-}
-
-void APersonagem::SetTemLanterna(bool NewValue)
-{
-	TemLanterna = NewValue;
-}
-
 void APersonagem::Pause() {
 	UWorld* World = GetWorld();
 	if (World) {
@@ -170,11 +149,8 @@ void APersonagem::Pause() {
 			if (UserW) {
 				UserW->AddToViewport();
 				PlayerController->bShowMouseCursor = true;
-				
 			}
-			
 		}
-		
 	}
 } 		  
 
@@ -197,9 +173,27 @@ void APersonagem::AdicionarCorDisponivel()
 
 void APersonagem::Atirar() 
 {
+	if (ArmaEmUso != nullptr) {
+		UWorld* World = GetWorld();
+		if (World) {
+			FActorSpawnParameters SpawnParameters;
+			AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), CameraComp->GetComponentRotation(), SpawnParameters);
+		}
+	}
+}
+
+bool APersonagem::IsTemArma() {
+	if (ArmaEmUso != nullptr) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void APersonagem::InicializarArma() {
 	UWorld* World = GetWorld();
 	if (World) {
 		FActorSpawnParameters SpawnParameters;
-		AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), CameraComp->GetComponentRotation(), SpawnParameters);
+		ArmaEmUso = World->SpawnActor<AArmaDoJogador>(GetActorLocation(), GetActorRotation(), SpawnParameters);
 	}
 }

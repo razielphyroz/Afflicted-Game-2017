@@ -31,7 +31,7 @@ AProjectile::AProjectile()
 
 	InitialLifeSpan = 3.0f;
 
-	Dano = 10;
+	Dano = 10.0f;
 }
 
 // Called when the game starts or when spawned
@@ -50,11 +50,12 @@ void AProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
 		AMonsters* Monster = Cast<AMonsters>(OtherActor);
-		if (Monster->GetLife() - Dano > 0) {
+		if (Monster->GetLife() - Dano > 0.0f) {
 			Monster->SetLife(Monster->GetLife() - Dano);
+			Monster->AtualizarBarraLife();
 		} else {
 			UE_LOG(LogTemp, Warning, TEXT("Monstro Destruido."));
-			Monster->Destroy();
+			Monster->Destruir();
 		}
 		Destroy();
 	}

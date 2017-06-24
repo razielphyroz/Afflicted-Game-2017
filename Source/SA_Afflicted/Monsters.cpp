@@ -3,6 +3,7 @@
 #include "SA_Afflicted.h"
 #include "Monsters.h"
 #include "Personagem.h"
+#include "LuzesDropadas.h"
 
 
 // Sets default values
@@ -30,9 +31,24 @@ AMonsters::AMonsters()
 		Mesh->SetStaticMesh(NewMesh.Object);
 	}
 
+	GreenLife = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GreenLife"));
+	GreenLife->bGenerateOverlapEvents = false;
+	GreenLife->SetCollisionProfileName("OverlapAllDynamic");
+	GreenLife->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+	GreenLife->SetRelativeScale3D(FVector(1.0f, 0.2f, 0.1f));
+	GreenLife->SetupAttachment(RootComponent);
+	ConstructorHelpers::FObjectFinder<UMaterial> GreenMaterial(TEXT("Material'/Game/Materials/GreenLife.GreenLife'"));
+	if (GreenMaterial.Succeeded()) {
+		GreenLife->SetMaterial(0, GreenMaterial.Object);
+	}
+	ConstructorHelpers::FObjectFinder<UStaticMesh> MeshGreen(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule'"));
+	if (MeshGreen.Succeeded()) {
+		GreenLife->SetStaticMesh(MeshGreen.Object);
+	}
+
 	CorParaAparecer = FMath::FRandRange(0, 5);
 	Damage = 5;
-	Life = 100;
+	Life = 1000.0f;
 }
 
 // Called when the game starts or when spawned
@@ -40,8 +56,10 @@ void AMonsters::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh->SetVisibility(false);
+	GreenLife->SetVisibility(false);
 	InitialPos = GetActorLocation();
 	CorParaAparecer = FMath::FRandRange(1, 6);
+	LifeInicial = Life;
 }
 
 // Called every frame
@@ -50,12 +68,22 @@ void AMonsters::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	Update();
 
+	UWorld* World = GetWorld();
+	if (World) {
+		APawn* Player = UGameplayStatics::GetPlayerPawn(World, 0);
+		if (Player) {
+			RodarBarraLife(FRotator(0.0f, Player->GetActorRotation().Yaw + 90.0f, 0.0f));
+		}
+	}
 }
 
 void AMonsters::SetVisible(bool Value)
 {
-	if (Mesh != nullptr && Mesh != NULL) {
+	if (Mesh) {
 		Mesh->SetVisibility(Value);
+	}
+	if (GreenLife) {
+		GreenLife->SetVisibility(Value);
 	}
 }
 
@@ -105,4 +133,27 @@ int8 AMonsters::GetLife()
 void AMonsters::SetLife(int8 Value)
 {
 	Life = Value;
+}
+
+void AMonsters::Destruir()
+{
+	UWorld* World = GetWorld();
+	if (World) {
+		FActorSpawnParameters SpawnParameters;
+		ALuzesDropadas* Luz = World->SpawnActor<ALuzesDropadas>(GetActorLocation(), GetActorRotation(), SpawnParameters);
+	}
+	Destroy();
+}
+
+void AMonsters::RodarBarraLife(FRotator Vetor)
+{
+	GreenLife->SetRelativeRotation(Vetor);
+}
+
+void AMonsters::AtualizarBarraLife()
+{
+	float NewLife = Life / 100;
+	if (NewLife >= 0.1f) {
+		GreenLife->SetRelativeScale3D(FVector(NewLife, 0.2f, 0.1f));
+	}
 }

@@ -27,6 +27,13 @@ public:
 
 	void SetLife(int8 Value);
 
+	void Destruir();
+
+	void RodarBarraLife(FRotator Vector);
+
+	void AtualizarBarraLife();
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -39,6 +46,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Mesh")
 		UStaticMeshComponent* Mesh;
 
+	UPROPERTY(EditAnywhere, Category = "LifeMesh")
+		UStaticMeshComponent* GreenLife;
+
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
 		int8 CorParaAparecer;
 
@@ -46,7 +56,10 @@ private:
 		int8 Damage;
 
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
-		int8 Life;
+		float Life;
+
+	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
+		float LifeInicial;
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

@@ -29,8 +29,6 @@ AArma::AArma()
 	if (Mesh.Succeeded()) {
 		ArmaMesh->SetStaticMesh(Mesh.Object);
 	}
-
-
 }
 
 // Called when the game starts or when spawned
@@ -72,13 +70,10 @@ void AArma::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 {
 	if (OtherActor != nullptr && OtherActor->IsA(APersonagem::StaticClass())) {
 		APersonagem* Personagem = Cast<APersonagem>(OtherActor);
-		if (!Personagem->IsTemArma() && !Personagem->IsTemLanterna()) {
-			Personagem->SetTemArma(true);
+		if (!Personagem->IsTemArma()) {
+			Personagem->InicializarArma();
 			UE_LOG(LogTemp, Warning, TEXT("Arma Coletada"));
 			Destroy();
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("Você Ja Possui Uma Lanterna"));
 		}
 	}
 }

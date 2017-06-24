@@ -26,18 +26,16 @@ public:
 	int16 GetLentesDisponiveis();
 	void SetLentesDisponiveis(int16 NewValue);
 
-	bool IsTemArma();
-	void SetTemArma(bool NewValue);
-
-	bool IsTemLanterna();
-	void SetTemLanterna(bool NewValue);
-
 	int8 GetLife();
 	void SetLife(int8 Value);
 
 	void AdicionarCorDisponivel();
 
 	void Atirar();
+
+	bool IsTemArma();
+
+	void InicializarArma();
 
 private:
 
@@ -52,6 +50,7 @@ private:
 
 	class ALanternaDoJogador* LanternaEmUso;
 
+	class AArmaDoJogador* ArmaEmUso;
 
 	void Move(float Value);
 
@@ -64,6 +63,4 @@ private:
 
 	int8 Life;
 
-	bool TemArma;
-	bool TemLanterna;
 };

@@ -34,7 +34,7 @@ private:
 		UProjectileMovementComponent* ProjectileMovement;
 
 	UPROPERTY(EditAnywhere)
-		int8 Dano;
+		float Dano;
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

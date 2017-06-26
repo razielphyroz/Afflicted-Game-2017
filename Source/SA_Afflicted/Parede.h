@@ -17,6 +17,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	int8 GetID();
 	void TrocarColisao(bool Value);
+	void Abaixar();
+	void SetAbaixavel(bool Value);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,5 +34,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "ParedeID")
 		int8 Id;
 
-	
+	bool Abaixavel;
 };

@@ -3,10 +3,11 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Monsters.h"
 #include "FirstMonster.generated.h"
 
 UCLASS()
-class SA_AFFLICTED_API AFirstMonster : public AActor
+class SA_AFFLICTED_API AFirstMonster : public AMonsters
 {
 	GENERATED_BODY()
 	

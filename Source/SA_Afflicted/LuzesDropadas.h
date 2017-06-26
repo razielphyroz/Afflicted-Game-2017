@@ -29,5 +29,5 @@ private:
 
 	FVector InitialPos;
 
-	int8 MoveDistance;
+	float MoveDistance;
 };

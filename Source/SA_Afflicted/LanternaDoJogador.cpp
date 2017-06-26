@@ -103,8 +103,7 @@ void ALanternaDoJogador::MudarCorDaLuz()
 		AMonsters* Monstro = Cast<AMonsters>(FoundMonsters[i]);
 		if (Monstro->GetCorParaAparecer() == CorAtual && Monstro->IsVisible() == false) {
 			Monstro->SetVisible(true);
-		}
-		else if (Monstro->GetCorParaAparecer() != CorAtual && Monstro->IsVisible() == true) {
+		} else if (Monstro->GetCorParaAparecer() != CorAtual && Monstro->IsVisible() == true) {
 			Monstro->SetVisible(false);
 		}
 	}

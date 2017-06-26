@@ -27,12 +27,15 @@ public:
 
 	void SetLife(float Value);
 
+	int8 GetId();
+
+	void SetId(int8 Value);
+
 	void Destruir();
 
 	void RodarBarraLife(FRotator Vector);
 
 	void AtualizarBarraLife();
-
 
 protected:
 	// Called when the game starts or when spawned
@@ -59,7 +62,13 @@ private:
 		float Life;
 
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
+		int8 Id;
+
+	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
 		float LifeInicial;
+
+	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
+		int8 Direction;
 
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -67,7 +76,7 @@ private:
 
 	FVector InitialPos;
 
-	int8 Direction;
-
 	void Update();
+
+	void Atirar();
 };

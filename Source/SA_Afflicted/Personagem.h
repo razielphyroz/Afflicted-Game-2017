@@ -34,6 +34,10 @@ public:
 
 	void InicializarArma();
 
+	int8 GetMonstrosMortos();
+
+	void SetMonstrosMortos(int8 Value);
+
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
@@ -58,5 +62,7 @@ private:
 	void Pause();	
 
 	float Life;
+
+	int8 MonstrosMortos;
 
 };

@@ -78,6 +78,9 @@ void APersonagem::Tick(float DeltaTime)
 	FRotator Rotation = GetActorRotation();
 	Rotation.Pitch -= 2.0f;
 	LanternaEmUso->SetActorRotation(Rotation);
+	if (Life <= 0) {
+		//Ja Elvis------------------------------------------------------------------------------------------
+	}
 }
 
 // Called to bind functionality to input
@@ -169,7 +172,9 @@ void APersonagem::Atirar()
 		UWorld* World = GetWorld();
 		if (World) {
 			FActorSpawnParameters SpawnParameters;
-			AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), GetActorRotation(), SpawnParameters);
+			FRotator Rotation = GetActorRotation();
+			Rotation.Pitch -= 5.0f;
+			AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), Rotation, SpawnParameters);
 		}
 	}
 }
@@ -188,4 +193,13 @@ void APersonagem::InicializarArma() {
 		FActorSpawnParameters SpawnParameters;
 		ArmaEmUso = World->SpawnActor<AArmaDoJogador>(GetActorLocation(), GetActorRotation(), SpawnParameters);
 	}
+}
+
+int8 APersonagem::GetMonstrosMortos() {
+	return MonstrosMortos;
+}
+
+void APersonagem::SetMonstrosMortos(int8 Value) {
+	MonstrosMortos = Value;
+
 }

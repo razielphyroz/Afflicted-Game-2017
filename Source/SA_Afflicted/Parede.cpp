@@ -32,6 +32,7 @@ void AParede::BeginPlay()
 void AParede::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	Abaixar();
 }
 
 int8 AParede::GetID()
@@ -48,4 +49,16 @@ void AParede::TrocarColisao(bool Value)
 		MeshComp->SetCollisionProfileName("OverlapAllDynamic");
 		MeshComp->SetVisibility(false);
 	}
+}
+
+void AParede::Abaixar()
+{
+	if (Abaixavel && GetActorLocation().Z >= -2170.0f) {
+		SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z - 10.0f));
+	}
+}
+
+void AParede::SetAbaixavel(bool Value)
+{
+	Abaixavel = Value;
 }

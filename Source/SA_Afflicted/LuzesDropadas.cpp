@@ -11,6 +11,7 @@ ALuzesDropadas::ALuzesDropadas()
 	PrimaryActorTick.bCanEverTick = true;
 	Light = CreateDefaultSubobject<UPointLightComponent>(TEXT("Luz"));
 	Light->SetIntensity(5000.0f);
+	MoveDistance = 240.0f;
 }
 
 // Called when the game starts or when spawned

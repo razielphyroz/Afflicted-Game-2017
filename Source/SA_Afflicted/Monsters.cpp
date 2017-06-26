@@ -4,6 +4,9 @@
 #include "Monsters.h"
 #include "Personagem.h"
 #include "LuzesDropadas.h"
+#include "Parede.h"
+#include "Lente.h"
+#include "ProjectilBoss.h"
 
 
 // Sets default values
@@ -48,7 +51,6 @@ AMonsters::AMonsters()
 
 	Damage = 5.0f;
 	Life = 100.0f;
-	CorParaAparecer = FMath::FRandRange(1, 2);
 }
 
 // Called when the game starts or when spawned
@@ -67,6 +69,7 @@ void AMonsters::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	Update();
+	Atirar();
 
 	UWorld* World = GetWorld();
 	if (World) {
@@ -109,12 +112,27 @@ void AMonsters::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 void AMonsters::Update() 
 {
 	if (Direction == 0) {
-		SetActorLocation(FVector(GetActorLocation().X + 1, GetActorLocation().Y, GetActorLocation().Z));
+		if (Id == 2) {
+			SetActorLocation(FVector(GetActorLocation().X + 10, GetActorLocation().Y, GetActorLocation().Z));
+		} else if (Id == 3) {
+			SetActorLocation(FVector(GetActorLocation().X + 25, GetActorLocation().Y-15, GetActorLocation().Z));
+		} else {
+			SetActorLocation(FVector(GetActorLocation().X + 5, GetActorLocation().Y, GetActorLocation().Z));
+		}
+		
 		if (GetActorLocation().X >= InitialPos.X + 100) {
 			Direction = 1;
 		}
 	} else {
-		SetActorLocation(FVector(GetActorLocation().X - 1, GetActorLocation().Y, GetActorLocation().Z));
+		if (Id == 2) {
+			SetActorLocation(FVector(GetActorLocation().X - 10, GetActorLocation().Y, GetActorLocation().Z));
+		}
+		else if (Id == 3) {
+			SetActorLocation(FVector(GetActorLocation().X - 25, GetActorLocation().Y+15, GetActorLocation().Z));
+		}
+		else {
+			SetActorLocation(FVector(GetActorLocation().X - 5, GetActorLocation().Y, GetActorLocation().Z));
+		}
 		if (GetActorLocation().X <= InitialPos.X - 100) {
 			Direction = 0;
 		}
@@ -135,10 +153,62 @@ void AMonsters::SetLife(float Value)
 	Life = Value;
 }
 
+int8 AMonsters::GetId()
+{
+	return Id;
+}
+
+void AMonsters::SetId(int8 Value)
+{
+	Id = Value;
+}
+
 void AMonsters::Destruir()
 {
+	if (Id == 1 || Id == 2) { //Primeiro Monstro
+		TArray<AActor*> FoundParede;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AParede::StaticClass(), FoundParede);
+
+		for (int i = 0; i < FoundParede.Num(); i++) {
+			AParede* Parede = Cast<AParede>(FoundParede[i]);
+			if (Id == 1 && Parede->GetID() == 2) {
+				//Destroe a segunda parede
+				Parede->SetAbaixavel(true);
+				break;
+			} else if (Id == 2 && Parede->GetID() == 3) {
+				//Destroe a teceira parede
+				UWorld* World = GetWorld();
+				if (World) {
+					FActorSpawnParameters SpawnParameters;
+					ALente* Lente = World->SpawnActor<ALente>(GetActorLocation(), GetActorRotation(), SpawnParameters);
+				}
+				
+				Parede->SetAbaixavel(true);
+				break;
+			}
+		}
+	}
+
 	UWorld* World = GetWorld();
 	if (World) {
+		APawn* Pawn = UGameplayStatics::GetPlayerPawn(World, 0);
+		if (Pawn) {
+			APersonagem* Personagem = Cast<APersonagem>(Pawn);
+			if (Personagem) {
+				Personagem->SetMonstrosMortos(Personagem->GetMonstrosMortos() + 1);
+				if (Personagem->GetMonstrosMortos() == 6 || Personagem->GetMonstrosMortos() == 18) {
+					TArray<AActor*> FoundParede;
+					UGameplayStatics::GetAllActorsOfClass(GetWorld(), AParede::StaticClass(), FoundParede);
+					for (int i = 0; i < FoundParede.Num(); i++) {
+						AParede* Parede = Cast<AParede>(FoundParede[i]);
+						if ((Personagem->GetMonstrosMortos() == 6 && Parede->GetID() == 5) || (Personagem->GetMonstrosMortos() == 18 && Parede->GetID() == 4)) {
+							Parede->SetAbaixavel(true);
+							break;
+						}
+					}
+				}
+			}
+		}
 		FActorSpawnParameters SpawnParameters;
 		ALuzesDropadas* Luz = World->SpawnActor<ALuzesDropadas>(GetActorLocation(), GetActorRotation(), SpawnParameters);
 	}
@@ -155,5 +225,20 @@ void AMonsters::AtualizarBarraLife()
 	float NewLife = Life / LifeInicial;
 	if (NewLife >= 0.1f) {
 		GreenLife->SetRelativeScale3D(FVector(NewLife, 0.2f, 0.1f));
+	}
+}
+
+void AMonsters::Atirar() {
+	if (Id == 3) {
+		int8 Random = FMath::RandRange(1, 20);
+		UWorld* World = GetWorld();
+		if (World && Random == 1) {
+			FActorSpawnParameters SpawnParameters;
+			FRotator Rotation = GetActorRotation();
+			Rotation.Roll = FMath::RandRange(0, 360);
+			Rotation.Pitch = FMath::RandRange(0, 360);
+			Rotation.Yaw = FMath::RandRange(0, 360);
+			AProjectilBoss* Projectile = World->SpawnActor<AProjectilBoss>(GetActorLocation(), Rotation, SpawnParameters);
+		}
 	}
 }

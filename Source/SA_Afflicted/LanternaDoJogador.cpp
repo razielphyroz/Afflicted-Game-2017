@@ -3,6 +3,7 @@
 #include "SA_Afflicted.h"
 #include "LanternaDoJogador.h"
 #include "Monsters.h"
+#include "Parede.h"
 
 
 // Sets default values
@@ -23,8 +24,8 @@ ALanternaDoJogador::ALanternaDoJogador()
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionCompLanterna"));
 	CollisionComp->bGenerateOverlapEvents = true;
 	CollisionComp->SetCollisionProfileName("OverlapAllDynamic");
-	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ALanternaDoJogador::OnOverlapBegin);
-	CollisionComp->OnComponentEndOverlap.AddDynamic(this, &ALanternaDoJogador::OnEndOverlap);
+	//CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &ALanternaDoJogador::OnOverlapBegin);
+	//CollisionComp->OnComponentEndOverlap.AddDynamic(this, &ALanternaDoJogador::OnEndOverlap);
 	CollisionComp->SetRelativeScale3D(FVector(30.0f, 15.0f, 15.0f));
 	CollisionComp->SetRelativeLocation(FVector(1200.0f, 0.0f, 40.0f));
 	CollisionComp->SetupAttachment(RootComponent);
@@ -32,7 +33,8 @@ ALanternaDoJogador::ALanternaDoJogador()
 	LuzLanterna = CreateDefaultSubobject<USpotLightComponent>(TEXT("LuzDaLanterna"));
 	LuzLanterna->SetupAttachment(RootComponent);
 
-	LuzLanterna->SetRelativeLocation(FVector(40.0f, 0.0f, 40.0f));
+	LuzLanterna->SetRelativeLocation(FVector(150.0f, 0.0f, 150.0f));
+
 	LuzLanterna->bUseTemperature = true;
 
 	LuzLanterna->SetIntensity(100000.0f);
@@ -40,7 +42,7 @@ ALanternaDoJogador::ALanternaDoJogador()
 	LuzLanterna->SetOuterConeAngle(55.0f);
 	LuzLanterna->SetAttenuationRadius(2500.0f);
 
-	CoresDisponiveis = 6;
+	CoresDisponiveis = 2;
 
 }
 
@@ -58,25 +60,32 @@ void ALanternaDoJogador::AdicionarCorDisponivel() {
 	}
 }
 
-void ALanternaDoJogador::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
-{
-	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
-		AMonsters* Monstro = Cast<AMonsters>(OtherActor);
-		if (Monstro->IsVisible() == false && Monstro->GetCorParaAparecer() == CorAtual) {
-			Monstro->SetVisible(true);
-		}	
-	}
-}
-
-void ALanternaDoJogador::OnEndOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
-		AMonsters* Monstro = Cast<AMonsters>(OtherActor);
-		if (Monstro->IsVisible() == true) {
-			Monstro->SetVisible(false);
-		}
-	}
-}
+//void ALanternaDoJogador::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+//{
+//	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
+//		AMonsters* Monstro = Cast<AMonsters>(OtherActor);
+//		if (Monstro->IsVisible() == false && Monstro->GetCorParaAparecer() == CorAtual) {
+//			Monstro->SetVisible(true);
+//		}	
+//	} else if (OtherActor != nullptr && OtherActor->IsA(AParede::StaticClass())) {
+//		AParede* Parede = Cast<AParede>(OtherActor);
+//		if (Parede->GetID() == 1 && CorAtual == 2) {
+//			Parede->TrocarColisao(false);
+//		} else {
+//			Parede->TrocarColisao(true);
+//		}
+//	}
+//}
+//
+//void ALanternaDoJogador::OnEndOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+//{
+//	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
+//		AMonsters* Monstro = Cast<AMonsters>(OtherActor);
+//		if (Monstro->IsVisible() == true) {
+//			Monstro->SetVisible(false);
+//		}
+//	}
+//}
 
 void ALanternaDoJogador::MudarCorDaLuz()
 {
@@ -87,18 +96,28 @@ void ALanternaDoJogador::MudarCorDaLuz()
 		CorAtual += 1;
 	}
 
-	TArray<AActor*> MonstrosDentroDaLuz;
-	CollisionComp->GetOverlappingActors(MonstrosDentroDaLuz);
+	TArray<AActor*> FoundMonsters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMonsters::StaticClass(), FoundMonsters);
 
-	for (int i = 0; i < MonstrosDentroDaLuz.Num(); i++) {
-		if (MonstrosDentroDaLuz[i]->IsA(AMonsters::StaticClass())) {
-			AMonsters* Monstro = Cast<AMonsters>(MonstrosDentroDaLuz[i]);
-			if (Monstro->GetCorParaAparecer() == CorAtual && Monstro->IsVisible() == false) {
-				Monstro->SetVisible(true);
-			}
-			else if (Monstro->GetCorParaAparecer() != CorAtual && Monstro->IsVisible() == true) {
-				Monstro->SetVisible(false);
-			}
+	for (int i = 0; i < FoundMonsters.Num(); i++) {
+		AMonsters* Monstro = Cast<AMonsters>(FoundMonsters[i]);
+		if (Monstro->GetCorParaAparecer() == CorAtual && Monstro->IsVisible() == false) {
+			Monstro->SetVisible(true);
+		}
+		else if (Monstro->GetCorParaAparecer() != CorAtual && Monstro->IsVisible() == true) {
+			Monstro->SetVisible(false);
+		}
+	}
+
+	TArray<AActor*> FoundParedes;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AParede::StaticClass(), FoundParedes);
+
+	for (int i = 0; i < FoundParedes.Num(); i++) {
+		AParede* Parede = Cast<AParede>(FoundParedes[i]);
+		if (Parede->GetID() == 1 && CorAtual == 2) {
+			Parede->TrocarColisao(false);
+		} else if (Parede->GetID() == 1 && CorAtual != 2) {
+			Parede->TrocarColisao(true);
 		}
 	}
 	

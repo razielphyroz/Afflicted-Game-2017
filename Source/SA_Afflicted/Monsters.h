@@ -23,9 +23,9 @@ public:
 
 	int8 GetCorParaAparecer();
 
-	int8 GetLife();
+	float GetLife();
 
-	void SetLife(int8 Value);
+	void SetLife(float Value);
 
 	void Destruir();
 
@@ -53,7 +53,7 @@ private:
 		int8 CorParaAparecer;
 
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
-		int8 Damage;
+		float Damage;
 
 	UPROPERTY(EditAnywhere, Category = "MonsterProprieties")
 		float Life;

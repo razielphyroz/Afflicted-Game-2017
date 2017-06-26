@@ -46,9 +46,9 @@ AMonsters::AMonsters()
 		GreenLife->SetStaticMesh(MeshGreen.Object);
 	}
 
-	CorParaAparecer = FMath::FRandRange(0, 5);
-	Damage = 5;
-	Life = 1000.0f;
+	Damage = 5.0f;
+	Life = 100.0f;
+	CorParaAparecer = FMath::FRandRange(1, 2);
 }
 
 // Called when the game starts or when spawned
@@ -58,8 +58,8 @@ void AMonsters::BeginPlay()
 	Mesh->SetVisibility(false);
 	GreenLife->SetVisibility(false);
 	InitialPos = GetActorLocation();
-	CorParaAparecer = FMath::FRandRange(1, 6);
 	LifeInicial = Life;
+
 }
 
 // Called every frame
@@ -125,12 +125,12 @@ int8 AMonsters::GetCorParaAparecer() {
 	return CorParaAparecer;
 }
 
-int8 AMonsters::GetLife()
+float AMonsters::GetLife()
 {
 	return Life;
 }
 
-void AMonsters::SetLife(int8 Value)
+void AMonsters::SetLife(float Value)
 {
 	Life = Value;
 }
@@ -152,7 +152,7 @@ void AMonsters::RodarBarraLife(FRotator Vetor)
 
 void AMonsters::AtualizarBarraLife()
 {
-	float NewLife = Life / 100;
+	float NewLife = Life / LifeInicial;
 	if (NewLife >= 0.1f) {
 		GreenLife->SetRelativeScale3D(FVector(NewLife, 0.2f, 0.1f));
 	}

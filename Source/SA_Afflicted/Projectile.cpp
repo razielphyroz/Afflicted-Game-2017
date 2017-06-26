@@ -3,6 +3,7 @@
 #include "SA_Afflicted.h"
 #include "Projectile.h"
 #include "Monsters.h"
+#include "Personagem.h"
 
 
 // Sets default values
@@ -29,7 +30,7 @@ AProjectile::AProjectile()
 	ProjectileMovement->MaxSpeed = 2000.0f;
 	ProjectileMovement->ProjectileGravityScale = 0.0f;
 
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 1.0f;
 
 	Dano = 10.0f;
 }
@@ -48,23 +49,23 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
+	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())){
 		AMonsters* Monster = Cast<AMonsters>(OtherActor);
-		if (Monster->GetLife() - Dano > 0.0f) {
-			Monster->SetLife(Monster->GetLife() - Dano);
-			Monster->AtualizarBarraLife();
-		} else {
-			UE_LOG(LogTemp, Warning, TEXT("Monstro Destruido."));
-			Monster->Destruir();
+		if (Monster->IsVisible()) {
+			if (Monster->GetLife() - Dano > 0.0f) {
+				Monster->SetLife(Monster->GetLife() - Dano);
+				Monster->AtualizarBarraLife();
+			} else {
+				Monster->Destruir();
+			}
+			Destroy();
 		}
-		Destroy();
 	}
 } 
 
 void AProjectile::InitVelocity(const FVector& ShootDirection)
 {
-	if (ProjectileMovement)
-	{
+	if (ProjectileMovement) {
 		ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
 	}
 }

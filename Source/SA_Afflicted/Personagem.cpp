@@ -25,7 +25,7 @@ APersonagem::APersonagem()
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComp->SetupAttachment(CameraBoom);
-
+	GetCapsuleComponent()->SetWorldScale3D(FVector(2.0f, 1.0f, 1.0f));
 	GetCharacterMovement()->MaxWalkSpeed = 800.0f;
 
 	ConstructorHelpers::FClassFinder<UUserWidget> LoadWidget
@@ -34,27 +34,27 @@ APersonagem::APersonagem()
 		UserWidgetPause = LoadWidget.Class;
 	}
 
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMesh(TEXT("SkeletalMesh'/Game/AnimStarterPack/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
-	if (SkeletalMesh.Succeeded()) {
-		GetMesh()->SetSkeletalMesh(SkeletalMesh.Object);
-	}
+	//ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMesh(TEXT("SkeletalMesh'/Game/AnimStarterPack/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
+	//if (SkeletalMesh.Succeeded()) {
+	//	GetMesh()->SetSkeletalMesh(SkeletalMesh.Object);
+	//}
 
-	GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
-	GetMesh()->SetWorldLocation(FVector(0.0f, 0.0f, -80.0f));
-	GetMesh()->SetWorldScale3D(FVector(0.9f, 0.9f, 0.9f));
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	//GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
+	//GetMesh()->SetWorldLocation(FVector(0.0f, 0.0f, -80.0f));
+	//GetMesh()->SetWorldScale3D(FVector(0.9f, 0.9f, 0.9f));
+	//GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
-	ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimObj(TEXT("AnimBlueprint'/Game/Animations/WalkAnimation.WalkAnimation'"));
-	if (AnimObj.Succeeded()) {
-		GetMesh()->SetAnimInstanceClass(AnimObj.Object->GetAnimBlueprintGeneratedClass());
-	}
+	//ConstructorHelpers::FObjectFinder<UAnimBlueprint> AnimObj(TEXT("AnimBlueprint'/Game/Animations/WalkAnimation.WalkAnimation'"));
+	//if (AnimObj.Succeeded()) {
+	//	GetMesh()->SetAnimInstanceClass(AnimObj.Object->GetAnimBlueprintGeneratedClass());
+	//}
 
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationPitch = true;
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	
-	Life = 100;
+	Life = 100.0f;
 
 }
 
@@ -62,7 +62,6 @@ APersonagem::APersonagem()
 void APersonagem::BeginPlay()
 {
 	Super::BeginPlay();
-	LentesDisponiveis = 2;
 
 	UWorld* World = GetWorld();
 	if (World) {
@@ -76,7 +75,9 @@ void APersonagem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	LanternaEmUso->SetActorLocation(FVector(GetActorLocation().X,GetActorLocation().Y,GetActorLocation().Z));
-	LanternaEmUso->SetActorRotation(GetActorRotation());
+	FRotator Rotation = GetActorRotation();
+	Rotation.Pitch -= 2.0f;
+	LanternaEmUso->SetActorRotation(Rotation);
 }
 
 // Called to bind functionality to input
@@ -96,15 +97,6 @@ void APersonagem::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Atirar", IE_Pressed, this, &APersonagem::Atirar);
 }
 
-int16 APersonagem::GetLentesDisponiveis()
-{
-	return LentesDisponiveis;
-}
-
-void APersonagem::SetLentesDisponiveis(int16 NewValue)
-{
-	LentesDisponiveis = NewValue;
-}
 
 void APersonagem::Move(float Value)
 {
@@ -154,12 +146,12 @@ void APersonagem::Pause() {
 	}
 } 		  
 
-int8 APersonagem::GetLife()
+float APersonagem::GetLife()
 {
 	return Life;
 }
 
-void APersonagem::SetLife(int8 Value)
+void APersonagem::SetLife(float Value)
 {
 	Life = Value;
 }
@@ -177,7 +169,7 @@ void APersonagem::Atirar()
 		UWorld* World = GetWorld();
 		if (World) {
 			FActorSpawnParameters SpawnParameters;
-			AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), CameraComp->GetComponentRotation(), SpawnParameters);
+			AProjectile* Projectile = World->SpawnActor<AProjectile>(GetActorLocation(), GetActorRotation(), SpawnParameters);
 		}
 	}
 }

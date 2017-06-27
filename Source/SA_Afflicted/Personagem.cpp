@@ -12,6 +12,7 @@
 #include "LanternaDoJogador.h"
 #include "Projectile.h"
 #include "ArmaDoJogador.h"
+#include "MyHUD.h"
 
 // Sets default values
 APersonagem::APersonagem()
@@ -67,6 +68,11 @@ void APersonagem::BeginPlay()
 	if (World) {
 		FActorSpawnParameters SpawnParameters;
 		LanternaEmUso = World->SpawnActor<ALanternaDoJogador>(GetActorLocation(), GetActorRotation(), SpawnParameters);
+	}
+
+	AMyHUD * hud = Cast<AMyHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (hud) {
+		hud->AtivarTexto(0);
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "Parede.h"
 #include "Lente.h"
 #include "ProjectilBoss.h"
+#include "MyHUD.h"
 
 
 // Sets default values
@@ -165,6 +166,7 @@ void AMonsters::SetId(int8 Value)
 
 void AMonsters::Destruir()
 {
+	AMyHUD * hud = Cast<AMyHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if (Id == 1 || Id == 2) { //Primeiro Monstro
 		TArray<AActor*> FoundParede;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AParede::StaticClass(), FoundParede);
@@ -173,6 +175,9 @@ void AMonsters::Destruir()
 			AParede* Parede = Cast<AParede>(FoundParede[i]);
 			if (Id == 1 && Parede->GetID() == 2) {
 				//Destroe a segunda parede
+				if (hud) {
+					hud->AtivarTexto(2);
+				}
 				Parede->SetAbaixavel(true);
 				break;
 			} else if (Id == 2 && Parede->GetID() == 3) {
@@ -182,10 +187,17 @@ void AMonsters::Destruir()
 					FActorSpawnParameters SpawnParameters;
 					ALente* Lente = World->SpawnActor<ALente>(GetActorLocation(), GetActorRotation(), SpawnParameters);
 				}
-				
+				if (hud) {
+					hud->AtivarTexto(4);
+				}
 				Parede->SetAbaixavel(true);
 				break;
 			}
+		}
+	} else if (Id == 3) {
+		
+		if (hud) {
+			hud->AtivarTexto(7);
 		}
 	}
 
@@ -202,6 +214,15 @@ void AMonsters::Destruir()
 					for (int i = 0; i < FoundParede.Num(); i++) {
 						AParede* Parede = Cast<AParede>(FoundParede[i]);
 						if ((Personagem->GetMonstrosMortos() == 6 && Parede->GetID() == 5) || (Personagem->GetMonstrosMortos() == 18 && Parede->GetID() == 4)) {
+							if (Parede->GetID() == 5) {
+								if (hud) {
+									hud->AtivarTexto(3);
+								}
+							} else {
+								if (hud) {
+									hud->AtivarTexto(6);
+								}
+							}
 							Parede->SetAbaixavel(true);
 							break;
 						}

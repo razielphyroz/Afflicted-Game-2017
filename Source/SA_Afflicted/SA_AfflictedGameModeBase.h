@@ -6,14 +6,17 @@
 #include "SA_AfflictedGameModeBase.generated.h"
 
 /**
- * 
- */
+*
+*/
 UCLASS()
 class SA_AFFLICTED_API ASA_AfflictedGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+
+
+public:
+
+	ASA_AfflictedGameModeBase();
+
+
 };

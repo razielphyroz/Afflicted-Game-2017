@@ -9,8 +9,8 @@ UCLASS()
 class SA_AFFLICTED_API AArma : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AArma();
 	// Called every frame
@@ -43,6 +43,6 @@ private:
 
 
 
-	
-	
+
+
 };

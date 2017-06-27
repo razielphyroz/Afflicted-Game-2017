@@ -3,14 +3,15 @@
 #include "SA_Afflicted.h"
 #include "Arma.h"
 #include "Personagem.h"
+#include "MyHUD.h"
 
 
 // Sets default values
 AArma::AArma()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Comp"));
 	CollisionComp->bGenerateOverlapEvents = true;
 	CollisionComp->SetCollisionProfileName("OverlapAllDynamic");
@@ -36,7 +37,7 @@ void AArma::BeginPlay()
 {
 	Super::BeginPlay();
 	InitialLocation = GetActorLocation();
-	
+
 }
 
 // Called every frame
@@ -49,7 +50,7 @@ void AArma::Tick(float DeltaTime)
 
 void AArma::Rodar() {
 
-	SetActorRotation(FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw - 0.5f, GetActorRotation().Roll));
+	SetActorRotation(FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw - 1.0f, GetActorRotation().Roll));
 
 	if (Direction == 0) {
 		SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 0.4f));
@@ -72,7 +73,10 @@ void AArma::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 		APersonagem* Personagem = Cast<APersonagem>(OtherActor);
 		if (!Personagem->IsTemArma()) {
 			Personagem->InicializarArma();
-			UE_LOG(LogTemp, Warning, TEXT("Arma Coletada"));
+			AMyHUD * hud = Cast<AMyHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			if (hud) {
+				hud->AtivarTexto(1);
+			}
 			Destroy();
 		}
 	}

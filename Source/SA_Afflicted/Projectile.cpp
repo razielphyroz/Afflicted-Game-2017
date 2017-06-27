@@ -9,20 +9,28 @@
 // Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-	MeshComp->bGenerateOverlapEvents = true;
-	MeshComp->SetCollisionProfileName("OverlapAllDynamic");
-	MeshComp->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapBegin);
-	MeshComp->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
+	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComp"));
+	CollisionComp->bGenerateOverlapEvents = true;
+	CollisionComp->SetCollisionProfileName("OverlapAllDynamic");
+	CollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapBegin);
+
+	CollisionComp->SetWorldScale3D(FVector(0.75f, 0.75f, 0.75f));
+	RootComponent = CollisionComp;
+
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	MeshComp->bGenerateOverlapEvents = false;
+	MeshComp->SetCollisionProfileName("NoCollision");
+	MeshComp->SetWorldScale3D(FVector(1.50f, 1.50f, 1.50f));
+	MeshComp->SetWorldLocation(FVector(0.0f, 0.0f, -55.0f));
+	ConstructorHelpers::FObjectFinder<UStaticMesh>Mesh(TEXT("StaticMesh'/Game/SA_things/coracaozao.coracaozao'"));
 	if (Mesh.Succeeded()) {
 		MeshComp->SetStaticMesh(Mesh.Object);
+		MeshComp->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
 	}
-	RootComponent = MeshComp;
+	MeshComp->SetupAttachment(RootComponent);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->UpdatedComponent = RootComponent;
@@ -49,16 +57,17 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())){
+	if (OtherActor != nullptr && OtherActor->IsA(AMonsters::StaticClass())) {
 		AMonsters* Monster = Cast<AMonsters>(OtherActor);
 		if (Monster->IsVisible()) {
 			if (Monster->GetLife() - Dano > 0.0f) {
 				Monster->SetLife(Monster->GetLife() - Dano);
 				Monster->AtualizarBarraLife();
-			} else {
+			}
+			else {
 				Monster->Destruir();
 			}
 			Destroy();
 		}
 	}
-} 
+}

@@ -3,6 +3,7 @@
 #include "SA_Afflicted.h"
 #include "Lente.h"
 #include "Personagem.h"
+#include "MyHUD.h"
 
 
 // Sets default values
@@ -50,6 +51,10 @@ void ALente::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	if (OtherActor != nullptr && OtherActor->IsA(APersonagem::StaticClass())) {
 		APersonagem*Personagem = Cast<APersonagem>(OtherActor);
 		Personagem->AdicionarCorDisponivel();
+		AMyHUD * hud = Cast<AMyHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		if (hud) {
+			hud->AtivarTexto(5);
+		}
 		Destroy();
 	}
 }
